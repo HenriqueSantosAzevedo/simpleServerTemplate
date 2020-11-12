@@ -1,11 +1,16 @@
+const hbs = require('hbs');
 const path = require('path');
 const colors = require('colors');
-const app = require('express')();
+const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+
+const app = express();
 const server = require('http').createServer(app);
 
-//initiate array prototype "load" => loads the routes predefined inside of array;
+app.use(express.static('./assets'));
+
+//loads the routes predefined inside of array;
 const router = require('./configuration/server-start/loadRoutes.js');
 
 //initiate configurations
@@ -20,6 +25,13 @@ router(
         {path: path.join(__dirname, 'router')}
     ]
 )
+
+app.get('*', (req, res) => {
+    res.sendStatus(404);
+})
+
+app.set('view engine', 'hbs');
+hbs.registerPartials(path.join(__dirname, "views", "partials"));
 
 
 //Startup Server
